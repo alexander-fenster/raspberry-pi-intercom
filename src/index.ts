@@ -46,7 +46,7 @@ let recordingTimer: NodeJS.Timeout | null = null;
 
 function startRecording() {
   if (recordingTimer) {
-    clearTimeout(recordingTimer);
+    console.log(`${new Date()}: recording is already in progress`);
   }
   recordingTimer = setTimeout(stopRecording, recordingTimeout);
   const streams = getStreams();
@@ -55,9 +55,12 @@ function startRecording() {
 }
 
 function stopRecording() {
-  if (recordingTimer) {
-    clearTimeout(recordingTimer);
+  if (!recordingTimer) {
+    console.log(`${new Date()}: recording already stopped`);
+    return;
   }
+  clearTimeout(recordingTimer);
+  recordingTimer = null;
   stopMicrophoneRecording();
   console.log(`${new Date()}: stopped recording`);
 }
