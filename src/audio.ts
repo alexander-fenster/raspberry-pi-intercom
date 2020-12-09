@@ -22,10 +22,10 @@ let microphoneProcess: cp.ChildProcess | null = null;
 export async function startMicrophoneRecording(
   streams: NodeJS.WritableStream[]
 ) {
+  await chime();
   if (microphoneProcess) {
     stopMicrophoneRecording();
   }
-  await chime();
   microphoneProcess = cp.spawn('arecord', ['-D', recordDevice]);
   microphoneProcess.stdout?.on('data', (data: Buffer) => {
     streams.forEach(stream => {
