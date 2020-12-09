@@ -18,11 +18,20 @@ import * as fs from 'fs';
 import {recordDevice, chimeWav} from './constants';
 
 let microphoneProcess: cp.ChildProcess | null = null;
+let startRequested = false;
 
 export async function startMicrophoneRecording(
   streams: NodeJS.WritableStream[]
 ) {
+  startRequested = true;
   await chime();
+  if (!startRequested) {
+    // the button was pressed and immediately released, do nothing
+    streams.forEach(stream => {
+      stream.end();
+    });
+    return;
+  }
   if (microphoneProcess) {
     stopMicrophoneRecording();
   }
@@ -40,6 +49,8 @@ export async function startMicrophoneRecording(
 }
 
 export function stopMicrophoneRecording() {
+  // prevent race condition during playing the chime
+  startRequested = false;
   if (!microphoneProcess) {
     return;
   }
