@@ -21,7 +21,7 @@
     "compile": "tsc",
     "fix": "gts fix",
     "prepare": "npm run compile",
-    "pretest": "npm run compile",
+    "test": "echo TBD",
     "posttest": "npm run lint",
     "start": "node build/src/index.js"
   }
